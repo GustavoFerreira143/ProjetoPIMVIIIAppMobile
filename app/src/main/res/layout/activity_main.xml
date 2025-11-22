@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:usesCleartextTraffic="true"
+    tools:context=".MainActivity">
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#111111"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="30dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Entrar"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="#E2DFD2"
+            android:layout_marginBottom="20dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Insira seu e-mail"
+            android:textColor="#E2DFD2"
+            android:gravity="center"
+            android:layout_marginBottom="10dp"/>
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:hint="seu.email@exemplo.com"
+            android:textColorHint="#9E9E9E"
+            android:textColor="#E2DFD2"
+            android:inputType="textEmailAddress"
+            android:backgroundTint="#E2DFD2"
+            android:layout_marginBottom="40dp"
+            android:maxLines="1"/>
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="261dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="#512BD4"
+            android:text="Efetuar Login"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnRegister"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Não tenho conta. Cadastrar."
+            android:textColor="#808080"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+</ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
