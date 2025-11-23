@@ -8,20 +8,15 @@ public class PlaylistModel implements Serializable {
     private int id_Playlist;
     private String nome;
     private int usuario_Id;
-    private List<VideoModel> videos;
 
-    // Construtor usado para listar playlists (id + nome)
-    public PlaylistModel(int id_Playlist, String nome) {
-        this.id_Playlist = id_Playlist;
-        this.nome = nome;
-    }
+    // a API manda "itensPlaylist", não vídeos
+    private List<VideoModel> itensPlaylist;
 
-    // Construtor completo opcional
-    public PlaylistModel(int id_Playlist, String nome, int usuario_Id, List<VideoModel> videos) {
+    public PlaylistModel(int id_Playlist, String nome, int usuario_Id, List<VideoModel> itensPlaylist) {
         this.id_Playlist = id_Playlist;
         this.nome = nome;
         this.usuario_Id = usuario_Id;
-        this.videos = videos;
+        this.itensPlaylist = itensPlaylist;
     }
 
     public int getId_Playlist() {
@@ -36,11 +31,11 @@ public class PlaylistModel implements Serializable {
         return usuario_Id;
     }
 
-    public List<VideoModel> getVideos() {
-        return videos;
+    public List<VideoModel> getItensPlaylist() {
+        return itensPlaylist;
     }
 
-    public void setVideos(List<VideoModel> videos) {
-        this.videos = videos;
+    public int getQtdVideos() {
+        return itensPlaylist != null ? itensPlaylist.size() : 0;
     }
 }

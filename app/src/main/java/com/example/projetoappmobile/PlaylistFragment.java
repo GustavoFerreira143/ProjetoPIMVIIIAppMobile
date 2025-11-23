@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -45,7 +44,10 @@ public class PlaylistFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.activity_fragment_playlist, container, false);
 
@@ -69,11 +71,6 @@ public class PlaylistFragment extends Fragment {
         SharedPreferences prefs = requireContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         String token = prefs.getString("auth_token", "");
 
-        if (token.isEmpty()) {
-            Toast.makeText(getContext(), "Usuário não autenticado!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
 
@@ -85,13 +82,11 @@ public class PlaylistFragment extends Fragment {
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("Authorization", "Bearer " + token);
-                conn.setConnectTimeout(5000);
 
                 if (conn.getResponseCode() == 200) {
                     BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                     StringBuilder sb = new StringBuilder();
                     String line;
-
                     while ((line = br.readLine()) != null) sb.append(line);
                     result = sb.toString();
                 }
@@ -113,18 +108,38 @@ public class PlaylistFragment extends Fragment {
     }
 
     private void processarPlaylists(String json) {
+
         listaPlaylists.clear();
 
         try {
             JSONArray arr = new JSONArray(json);
 
             for (int i = 0; i < arr.length(); i++) {
+
                 JSONObject obj = arr.getJSONObject(i);
 
                 int id = obj.getInt("id_Playlist");
                 String nome = obj.getString("nome");
+                int usuarioId = obj.getInt("usuario_Id");
 
-                listaPlaylists.add(new PlaylistModel(id, nome));
+                JSONArray itens = obj.getJSONArray("itensPlaylist");
+                List<VideoModel> listaVideos = new ArrayList<>();
+
+                for (int j = 0; j < itens.length(); j++) {
+                    JSONObject item = itens.getJSONObject(j);
+
+                    JSONObject conteudo = item.getJSONObject("conteudo");
+
+                    listaVideos.add(new VideoModel(
+                            conteudo.getInt("id_Conteudo"),
+                            conteudo.getString("titulo"),
+                            conteudo.getString("tipo"),
+                            conteudo.getString("video"),
+                            conteudo.getString("thumbnail")
+                    ));
+                }
+
+                listaPlaylists.add(new PlaylistModel(id, nome, usuarioId, listaVideos));
             }
 
         } catch (Exception e) {
@@ -158,7 +173,7 @@ public class PlaylistFragment extends Fragment {
         builder.setView(layout);
 
         Button btnSalvar = layout.findViewById(R.id.btnSalvarPlaylist);
-        EditText edtNome = layout.findViewById(R.id.edtNomePlaylist);
+        androidx.appcompat.widget.AppCompatEditText edtNome = layout.findViewById(R.id.edtNomePlaylist);
 
         AlertDialog dialog = builder.create();
 
@@ -177,6 +192,7 @@ public class PlaylistFragment extends Fragment {
     }
 
     private void criarPlaylist(String nome, AlertDialog dialog) {
+
         SharedPreferences prefs = requireContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE);
         String token = prefs.getString("auth_token", "");
 
@@ -184,6 +200,7 @@ public class PlaylistFragment extends Fragment {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
+
             boolean sucesso = false;
 
             try {

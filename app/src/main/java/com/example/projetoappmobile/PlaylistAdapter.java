@@ -14,10 +14,11 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder> {
+public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.ViewHolder> {
 
     private Context context;
     private List<PlaylistModel> playlists;
+    private static final String BASE_URL = "http://10.0.2.2:5187/";
 
     public PlaylistAdapter(Context context, List<PlaylistModel> playlists) {
         this.context = context;
@@ -26,50 +27,59 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
 
     @NonNull
     @Override
-    public PlaylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.activity_item_playlist, parent, false);
-        return new PlaylistViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.activity_item_playlist, parent, false);
+        return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PlaylistViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         PlaylistModel playlist = playlists.get(position);
 
-        holder.txtNomePlaylist.setText(playlist.getNome());
-        holder.txtQtdVideos.setText(playlist.getVideos().size() + " vídeos");
+        holder.txtNome.setText(playlist.getNome());
+        holder.txtQtd.setText(playlist.getQtdVideos() + " vídeos");
 
-        List<VideoModel> vids = playlist.getVideos();
-        int total = vids.size();
+        List<VideoModel> itens = playlist.getItensPlaylist();
 
-        // ====== THUMB 1 ======
-        if (total > 0)
-            Glide.with(context).load(vids.get(0).getThumbnailUrl()).into(holder.thumb1);
+        // Limpando o estado anterior
+        holder.overlayMais.setVisibility(View.GONE);
+        holder.txtMais.setVisibility(View.GONE);
 
-        // ====== THUMB 2 ======
-        if (total > 1)
-            Glide.with(context).load(vids.get(1).getThumbnailUrl()).into(holder.thumb2);
+        // Se não tiver vídeos
+        if (itens == null || itens.isEmpty()) {
+            holder.thumb1.setImageResource(android.R.color.darker_gray);
+            holder.thumb2.setImageResource(android.R.color.darker_gray);
+            holder.thumb3.setImageResource(android.R.color.darker_gray);
+            holder.thumb4.setImageResource(android.R.color.darker_gray);
+            return;
+        }
 
-        // ====== THUMB 3 ======
-        if (total > 2)
-            Glide.with(context).load(vids.get(2).getThumbnailUrl()).into(holder.thumb3);
+        // Carrega thumbs conforme quantidade disponível
+        if (itens.size() > 0) loadThumb(holder.thumb1, itens.get(0).getThumbnailUrl());
+        if (itens.size() > 1) loadThumb(holder.thumb2, itens.get(1).getThumbnailUrl());
+        if (itens.size() > 2) loadThumb(holder.thumb3, itens.get(2).getThumbnailUrl());
+        if (itens.size() > 3) loadThumb(holder.thumb4, itens.get(3).getThumbnailUrl());
 
-        // ====== THUMB 4 ======
-        if (total > 3)
-            Glide.with(context).load(vids.get(3).getThumbnailUrl()).into(holder.thumb4);
-
-        // ====== LÓGICA DO +X ======
-        if (total > 4) {
+        // Se tiver MAIS de 4 vídeos → mostrar overlay +X
+        if (itens.size() > 4) {
+            int extra = itens.size() - 4;
             holder.overlayMais.setVisibility(View.VISIBLE);
             holder.txtMais.setVisibility(View.VISIBLE);
-
-            int extra = total - 3;
-            if (extra > 99) extra = 99;
-
             holder.txtMais.setText("+" + extra);
-        } else {
-            holder.overlayMais.setVisibility(View.GONE);
-            holder.txtMais.setVisibility(View.GONE);
         }
+    }
+
+    private void loadThumb(ImageView img, String relative) {
+
+        if (relative != null && !relative.startsWith("/"))
+            relative = "/" + relative;
+
+        Glide.with(context)
+                .load(BASE_URL + relative)
+                .placeholder(android.R.drawable.ic_menu_gallery)
+                .error(android.R.drawable.stat_notify_error)
+                .into(img);
     }
 
     @Override
@@ -77,13 +87,13 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
         return playlists.size();
     }
 
-    public static class PlaylistViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView thumb1, thumb2, thumb3, thumb4;
         View overlayMais;
-        TextView txtMais, txtNomePlaylist, txtQtdVideos;
+        TextView txtMais, txtNome, txtQtd;
 
-        public PlaylistViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             thumb1 = itemView.findViewById(R.id.thumb1);
@@ -94,8 +104,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
             overlayMais = itemView.findViewById(R.id.overlayMais);
             txtMais = itemView.findViewById(R.id.txtMais);
 
-            txtNomePlaylist = itemView.findViewById(R.id.txtNomePlaylist);
-            txtQtdVideos = itemView.findViewById(R.id.txtQtdVideos);
+            txtNome = itemView.findViewById(R.id.txtNomePlaylist);
+            txtQtd = itemView.findViewById(R.id.txtQtdVideos);
         }
     }
 }
