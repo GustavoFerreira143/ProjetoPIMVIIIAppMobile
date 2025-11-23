@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="#1E1E1E">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Área das thumbs -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:padding="6dp">
+
+            <!-- GRID com 4 thumbs -->
+            <GridLayout
+                android:id="@+id/gridThumbs"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnCount="2"
+                android:rowCount="2"
+                android:alignmentMode="alignBounds"
+                android:useDefaultMargins="true">
+
+                <!-- Thumb 1 -->
+                <ImageView
+                    android:id="@+id/thumb1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:scaleType="centerCrop"
+                    android:background="#333" />
+
+                <!-- Thumb 2 -->
+                <ImageView
+                    android:id="@+id/thumb2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:scaleType="centerCrop"
+                    android:background="#333" />
+
+                <!-- Thumb 3 -->
+                <ImageView
+                    android:id="@+id/thumb3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    android:scaleType="centerCrop"
+                    android:background="#333" />
+
+                <!-- Thumb 4 (com overlay para +X) -->
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1">
+
+                    <ImageView
+                        android:id="@+id/thumb4"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:background="#333" />
+
+                    <!-- Overlay cinza (visível quando tem + de 4 vídeos) -->
+                    <View
+                        android:id="@+id/overlayMais"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#AA000000"
+                        android:visibility="gone"/>
+
+                    <!-- Indicador +X -->
+                    <TextView
+                        android:id="@+id/txtMais"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:textSize="26sp"
+                        android:text="+10"
+                        android:visibility="gone"/>
+                </FrameLayout>
+
+            </GridLayout>
+        </RelativeLayout>
+
+        <!-- Área de texto -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/txtNomePlaylist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nome da Playlist"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+            <TextView
+                android:id="@+id/txtQtdVideos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5 vídeos"
+                android:textColor="#AAAAAA"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

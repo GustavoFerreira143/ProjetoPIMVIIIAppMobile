@@ -1,4 +1,5 @@
 package com.example.projetoappmobile;
+
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,33 +20,32 @@ public class Home extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewPager2 viewPager = findViewById(R.id.viewPager);
 
-        // Configura o Adapter do ViewPager
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
         viewPager.setAdapter(adapter);
 
-        // Liga as abas ao ViewPager
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            if (position == 0) tab.setText("Vídeos");
-            else tab.setText("Outros");
+            switch (position) {
+                case 0: tab.setText("Vídeos"); break;
+                case 1: tab.setText("Playlists"); break;
+            }
         }).attach();
     }
 
-    // Adapter interno para gerenciar as abas
     static class ViewPagerAdapter extends FragmentStateAdapter {
-        public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
-            super(fragmentActivity);
+        public ViewPagerAdapter(@NonNull FragmentActivity fa) {
+            super(fa);
         }
 
         @NonNull
         @Override
         public Fragment createFragment(int position) {
             if (position == 0) return new VideosFragment();
-            return new Fragment(); // Retorna Fragment vazio para a 2ª aba por enquanto
+            return new PlaylistFragment();
         }
 
         @Override
         public int getItemCount() {
-            return 2; // Temos 2 abas
+            return 2;
         }
     }
 }
