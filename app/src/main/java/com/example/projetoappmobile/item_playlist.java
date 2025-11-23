@@ -16,7 +16,8 @@ public class item_playlist extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_item_playlist);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        // Usa o container root da Activity (não precisa alterar o XML)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
